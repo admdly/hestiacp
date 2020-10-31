@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall chain
-# options: CHAIN [PORT] [PROTOCOL]
+# options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
@@ -13,11 +13,11 @@
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 port=$2
+protocol=${4-TCP}
 protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
-ip6tables="/sbin/ip6tables"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

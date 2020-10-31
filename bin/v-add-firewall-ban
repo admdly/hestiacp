@@ -16,7 +16,6 @@ chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
-ip6tables="/sbin/ip6tables"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -36,9 +35,9 @@ check_args '2' "$#" 'IP CHAIN'
 is_format_valid 'ip' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -48,7 +47,7 @@ check_hestia_demo_mode
 heal_iptables_links
 
 # Checking server ip
-if [ -e "$HESTIA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ] || [ "$ip" = '::1' ]; then
+if [ -e "$HESTIA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
     exit
 fi
 
