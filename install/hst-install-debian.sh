@@ -653,22 +653,29 @@ fi
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
 mask2='*[[:alnum:]](-?[[:alnum:]])+\.[[:alnum:]]{2,}'
 if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
-    if [[ -n "$servername" ]]; then
-        servername="$servername.example.com"
-    else
-        servername="example.com"
-    fi
-    echo "127.0.0.1 $servername" >> /etc/hosts
-    if [ "$ipv6" = 'yes' ]; then
-        echo "::1 $servername" >> /etc/hosts
-    fi
+	if [[ -n "$servername" ]]; then
+		servername="$servername.example.com"
+	else
+		servername="example.com"
+	fi
+	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [[ -n "$servername" ]]; then
+		servername="$servername.example.com"
+	else
+		servername="example.com"
+	fi
+	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
-    echo "127.0.0.1 $servername" >> /etc/hosts
-    if [ "$ipv6" = 'yes' ]; then
-        echo "::1 $servername" >> /etc/hosts
-    fi
+	echo "127.0.0.1 $servername" >> /etc/hosts
+	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 # Set email if it wasn't set
@@ -1337,8 +1344,8 @@ cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
 if [ "$ipv6" = 'yes' ]; then
-    cp -f $HESTIA_INSTALL_DIR/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
-    cp -f $HESTIA_INSTALL_DIR/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
+	cp -f $HESTIA_INSTALL_DIR/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
+	cp -f $HESTIA_INSTALL_DIR/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
 fi
 mkdir -p /etc/nginx/conf.d/domains
 mkdir -p /etc/nginx/modules-enabled
@@ -1347,14 +1354,17 @@ mkdir -p /var/log/nginx/domains
 # Update dns servers in nginx.conf
 dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
 for ip in $dns_resolver; do
-    if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        resolver="$ip $resolver"
-    fi
-    if [ "$ipv6" = 'yes' ]; then
-        if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
-            resolver="[$ip] $resolver"
-        fi
-    fi
+	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		resolver="$ip $resolver"
+	fi
+	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		resolver="$ip $resolver"
+	fi
+	if [ "$ipv6" = 'yes' ]; then
+		if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
+			resolver="[$ip] $resolver"
+		fi
+	fi
 done
 if [ -n "$resolver" ]; then
     if [ "$ipv6" = 'yes' ]; then
@@ -1404,17 +1414,24 @@ if [ "$apache" = 'yes' ]; then
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
 
-    if [ "$ipv6" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
-    fi
+	# Enable needed modules
+	a2enmod rewrite > /dev/null 2>&1
+	a2enmod suexec > /dev/null 2>&1
+	a2enmod ssl > /dev/null 2>&1
+	a2enmod actions > /dev/null 2>&1
+	a2dismod --quiet status > /dev/null 2>&1
+	a2enmod --quiet hestia-status > /dev/null 2>&1
+	if [ "$ipv6" = 'yes' ]; then
+		cp -f $HESTIA_INSTALL_DIR/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
+	fi
 
-    # Enable needed modules
-    a2enmod rewrite > /dev/null 2>&1
-    a2enmod suexec > /dev/null 2>&1
-    a2enmod ssl > /dev/null 2>&1
-    a2enmod actions > /dev/null 2>&1
-    a2dismod --quiet status > /dev/null 2>&1
-    a2enmod --quiet hestia-status > /dev/null 2>&1
+	# Enable needed modules
+	a2enmod rewrite > /dev/null 2>&1
+	a2enmod suexec > /dev/null 2>&1
+	a2enmod ssl > /dev/null 2>&1
+	a2enmod actions > /dev/null 2>&1
+	a2dismod --quiet status > /dev/null 2>&1
+	a2enmod --quiet hestia-status > /dev/null 2>&1
 
 	if [ "$phpfpm" = 'yes' ]; then
 		# Disable prefork and php, enable event
@@ -1497,20 +1514,31 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 #----------------------------------------------------------#
 
 if [ "$vsftpd" = 'yes' ]; then
-    echo "[ * ] Configuring Vsftpd server..."
-    cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
-    if [ "$ipv6" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
-    fi
-    touch /var/log/vsftpd.log
-    chown root:adm /var/log/vsftpd.log
-    chmod 640 /var/log/vsftpd.log
-    touch /var/log/xferlog
-    chown root:adm /var/log/xferlog
-    chmod 640 /var/log/xferlog
-    update-rc.d vsftpd defaults
-    systemctl start vsftpd
-    check_result $? "vsftpd start failed"
+	echo "[ * ] Configuring Vsftpd server..."
+	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	touch /var/log/vsftpd.log
+	chown root:adm /var/log/vsftpd.log
+	chmod 640 /var/log/vsftpd.log
+	touch /var/log/xferlog
+	chown root:adm /var/log/xferlog
+	chmod 640 /var/log/xferlog
+	update-rc.d vsftpd defaults
+	systemctl start vsftpd
+	check_result $? "vsftpd start failed"
+	echo "[ * ] Configuring Vsftpd server..."
+	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	if [ "$ipv6" = 'yes' ]; then
+		cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
+	fi
+	touch /var/log/vsftpd.log
+	chown root:adm /var/log/vsftpd.log
+	chmod 640 /var/log/vsftpd.log
+	touch /var/log/xferlog
+	chown root:adm /var/log/xferlog
+	chmod 640 /var/log/xferlog
+	update-rc.d vsftpd defaults
+	systemctl start vsftpd
+	check_result $? "vsftpd start failed"
 
 fi
 
@@ -2002,8 +2030,9 @@ echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
-ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
-ipv6=$(ip addr|grep 'inet6 '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
+ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
+ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
+ipv6=$(ip addr | grep 'inet6 ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
 local_ip=$ip
 local_ipv6=$ipv6
 
